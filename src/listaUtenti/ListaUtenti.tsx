@@ -1,29 +1,22 @@
 import { useEffect } from "react";
-import { useFetch } from "../customHooks/useFetch";
 import { useDispatch, useSelector } from "react-redux";
 import { getUtentiAsync } from "../slice/utentiSlice";
-
-type Utente = {
-  id: number;
-  name: string;
-  age: number;
-  isAdmin: boolean;
-  codice: number;
-};
+import UtenteCard from "../Cards/UtenteCard";
 
 export default function ListaUtenti() {
   const { data, loading, error } = useSelector((state) => state.utenti);
   // Ensure data is always an array
-  const utenti: Utente[] = Array.isArray(data) ? data : [];
   const dispatch = useDispatch();
 
   useEffect(() => {
     dispatch(getUtentiAsync());
   }, [dispatch]);
+
+  console.log(data);
   return (
     <div>
       {loading && <p>Caricamento in corso...</p>}
-      {utenti.length > 0 ? (
+      {/*{utenti.length > 0 ? (
         utenti.map((utente: Utente) => (
           <div key={utente.id}>
             <h2>{utente.name}</h2>
@@ -34,8 +27,9 @@ export default function ListaUtenti() {
         ))
       ) : (
         <p>Nessun utente trovato.</p>
-      )}
+      )}*/}
       {error && <p>Errore: {error}</p>}
+      <UtenteCard data={data} />
     </div>
   );
 }
