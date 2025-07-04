@@ -5,3 +5,7 @@ export default interface Utenti {
     codice_utente: number;
     password_utente: string;
 }
+
+export default interface Categorie {
+    name: string;
+}

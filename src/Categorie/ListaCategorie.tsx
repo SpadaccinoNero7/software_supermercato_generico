@@ -1,15 +1,15 @@
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { getUtentiAsync } from "../slice/utentiSlice";
 import UtenteCard from "../Cards/UtenteCard";
+import { getCategorieAsync } from "../slice/categorieSlice";
 
-export default function ListaUtenti() {
-  const { data, loading, error } = useSelector((state) => state.utenti);
+export default function ListaCategorie() {
+  const { data, loading, error } = useSelector((state) => state.categorie);
   // Ensure data is always an array
   const dispatch = useDispatch();
 
   useEffect(() => {
-    dispatch(getUtentiAsync());
+    dispatch(getCategorieAsync());
   }, [dispatch]);
 
   console.log(data);
@@ -29,7 +29,7 @@ export default function ListaUtenti() {
         <p>Nessun utente trovato.</p>
       )}*/}
       {error && <p>Errore: {error}</p>}
-      <UtenteCard type="Utenti" data={data} />
+      <UtenteCard type="Categorie" data={data} />
     </div>
   );
 }

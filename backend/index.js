@@ -32,6 +32,16 @@ app.get('/api/utenti', async (req, res) => {
   }
 });
 
+app.get('/api/categorie', async (req, res) => {
+  try {
+    const result = await pool.query('SELECT * FROM categorie ORDER BY id');
+    res.json(result.rows);
+  } catch (err) {
+    console.error(err);
+    res.status(500).send('Errore server');
+  }
+});
+
 app.get('/api/utenti/:id', async (req, res) => {
   const id = req.params.id;
   try {
@@ -52,6 +62,21 @@ app.post('/api/utenti', async (req, res) => {
     const result = await pool.query(
   'INSERT INTO utenti (name, age, is_admin, date, password_utente, codice_utente) VALUES ($1, $2, $3, $4, $5, $6)',
    [name, age, is_admin, date, password_utente, codice_utente]
+);
+
+    res.status(201).json(result.rows[0]);
+  } catch (err) {
+    console.error(err);
+    res.status(500).send('Errore server');
+  }
+});
+
+app.post('/api/categorie', async (req, res) => {
+  const { name } = req.body;
+  try {
+    const result = await pool.query(
+  'INSERT INTO categorie (name) VALUES ($1)',
+   [name]
 );
 
     res.status(201).json(result.rows[0]);
