@@ -3,14 +3,22 @@ import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 import Typography from "@mui/material/Typography";
 import type Utenti from "../infoComponents/interfaces";
-import type Categprie from "../infoComponents/interfaces";
-
+import type Categorie from "../infoComponents/interfaces";
+import DeleteIcon from "@mui/icons-material/Delete";
+import { useDispatch } from "react-redux";
+import { deleteCategorieAsync } from "../slice/categorieSlice";
+import { Link } from "react-router-dom";
 interface UtenteCardProps {
   type: string;
   data: Utenti[];
 }
 
-export default function UtenteCard({ type, data }: UtenteCardProps) {
+export default function GlobalCard({ type, data }: UtenteCardProps) {
+  const dispatch = useDispatch();
+
+  const handleDelete = (id) => {
+    dispatch(deleteCategorieAsync(id));
+  };
   return (
     <>
       {type === "Utenti" && (
@@ -50,12 +58,24 @@ export default function UtenteCard({ type, data }: UtenteCardProps) {
                   <Typography variant="h6" component="div">
                     {el.name}
                   </Typography>
+
+                  <DeleteIcon
+                    sx={{ cursor: "pointer", color: "red" }}
+                    onClick={() => handleDelete(el.id)}
+                  />
                 </CardContent>
               </Card>
             ))
           ) : (
-            <Typography variant="body2" color="text.secondary">
-              Nessuna categoria trovata.
+            <Typography variant="body2" color="white">
+              Nessuna categoria trovata
+              <br />
+              Aggiungine una cliccando {""}
+              <Link to="/aggiungiCategoria">
+                <span style={{ color: "white", textDecoration: "underline" }}>
+                  qui
+                </span>
+              </Link>
             </Typography>
           )}
         </Box>

@@ -1,11 +1,9 @@
 import { useState } from "react";
 import { useDispatch } from "react-redux";
-import { useFetch } from "../customHooks/useFetch";
-import { addUtentiAsync } from "../slice/utentiSlice";
 import { addCategorieAsync } from "../slice/categorieSlice";
+import { Link } from "react-router-dom";
 
 export default function AggiungiCategoria() {
-  const { data, loading, error } = useFetch("/api/categorie");
   const [name, setName] = useState<string>("");
   const dispatch = useDispatch();
 
@@ -33,6 +31,11 @@ export default function AggiungiCategoria() {
       <button type="submit" onClick={handleAdd}>
         Aggiungi
       </button>
+      <div>
+        <Link to="/categorie">
+          <button>Visualizza categorie</button>
+        </Link>
+      </div>
     </div>
   );
 }

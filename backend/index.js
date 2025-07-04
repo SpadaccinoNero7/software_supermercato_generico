@@ -86,6 +86,20 @@ app.post('/api/categorie', async (req, res) => {
   }
 });
 
+app.delete('/api/categorie/:id', async (req, res) => {
+  const id = req.params.id;
+  try {
+    const result = await pool.query('DELETE FROM categorie WHERE id = $1', [id]);
+    if (result.rowCount === 0) {
+      return res.status(404).send('Categoria non trovata');
+    }
+    res.status(204).send();
+  } catch (err) {
+    console.error(err);
+    res.status(500).send('Errore server');
+  }
+})
+
 app.listen(port, () => {
   console.log(`Server avviato su http://localhost:${port}`);
 });

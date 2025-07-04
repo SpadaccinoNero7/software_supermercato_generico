@@ -1,7 +1,7 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
 import PORT from "../infoComponents/PORT";
-import type Utenti from "../infoComponents/interfaces";
+import type Categorie from "../infoComponents/interfaces";
 
 export const getCategorieAsync = createAsyncThunk(
   "categorie/getCategorieAsync",
@@ -13,12 +13,20 @@ export const getCategorieAsync = createAsyncThunk(
 
 export const addCategorieAsync = createAsyncThunk(
   "categorie/addCategorieAsync",
-  async (payload: Utenti) => {
+  async (payload: Categorie) => {
     const response = await axios.post(`${PORT}/api/categorie`, {
   name: payload.name,
 });
 
     return response.data;
+  }
+);
+
+export const deleteCategorieAsync = createAsyncThunk(
+  "categorie/deleteCategorieAsync",
+  async (id) => {
+    await axios.delete(`${PORT}/api/categorie/${id}`);
+    return id;
   }
 );
 
@@ -54,6 +62,18 @@ const categorieSlice = createSlice({
         state.data.push(action.payload);
       })
       .addCase(addCategorieAsync.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.error.message;
+      })
+      .addCase(deleteCategorieAsync.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(deleteCategorieAsync.fulfilled, (state, action) => {
+        state.loading = false;
+        state.data = state.data.filter((categorie) => categorie.id !== action.payload);
+      })
+      .addCase(deleteCategorieAsync.rejected, (state, action) => {
         state.loading = false;
         state.error = action.error.message;
       })
