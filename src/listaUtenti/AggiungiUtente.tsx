@@ -5,6 +5,7 @@ import SnackBar from "../infoComponents/SnackBarComponent";
 import { Link } from "react-router-dom";
 import InputTesto from "../infoComponents/InputTesto";
 import CheckBox from "../infoComponents/CheckBox";
+import "./utenti.css";
 
 export default function AggiungiUtente() {
   const [name, setName] = useState<string>("");
@@ -52,7 +53,7 @@ export default function AggiungiUtente() {
       <InputTesto
         value={name}
         label="Inserisci il nome"
-        color="error"
+        color="info"
         autoFocus
         onChange={(e) => setName(e.target.value)}
       />

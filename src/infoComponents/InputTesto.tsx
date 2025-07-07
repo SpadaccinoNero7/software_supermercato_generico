@@ -25,6 +25,11 @@ export default function InputTesto({
         color={color || "primary"}
         autoFocus={autoFocus}
         onChange={onChange}
+        slotProps={{
+          input: {
+            style: { color: "white" }, // ✅ colore del testo inserito
+          },
+        }}
       />
     </Box>
   );

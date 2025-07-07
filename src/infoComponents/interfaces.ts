@@ -22,13 +22,13 @@ export default interface InputTestoProps {
     label: string
     color?: "primary" | "secondary" | "error" | "info" | "success" | "warning";
     autoFocus?: boolean
-    onChange?: (event: React.ChangeEvent<HTMLInputElement>) => void;
+    onChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
 export default interface CheckBoxProps {
     label: string;
     checked: boolean;
-    onChange: (event: React.ChangeEvent<HTMLInputElement>) => boolean;
+    onChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
     labelPlacement?: "end" | "start" | "top" | "bottom";
     color?: "default" | "primary" | "secondary" | "error" | "info" | "success" | "warning";
 }
