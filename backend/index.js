@@ -6,7 +6,6 @@ const { Pool } = require('pg');
 const app = express();
 const port = 3000;
 
-// Crea il pool di connessioni PostgreSQL
 const pool = new Pool({
   host: process.env.PGHOST,
   user: process.env.PGUSER,
@@ -15,13 +14,11 @@ const pool = new Pool({
   port: process.env.PGPORT,
 });
 
-// Middleware per JSON
 app.use(cors({
-  origin: 'http://localhost:5173'  // l'URL del tuo frontend
+  origin: 'http://localhost:5173'
 }));
 app.use(express.json());
 
-// Endpoint di test
 app.get('/api/utenti', async (req, res) => {
   try {
     const result = await pool.query('SELECT * FROM utenti ORDER BY id');
@@ -73,23 +70,25 @@ app.get('/api/utenti/:id', async (req, res) => {
 app.post('/api/utenti', async (req, res) => {
   const { name, age, is_admin, date, password_utente, codice_utente } = req.body;
 
+  function generaPasswordUtente() {
+  const num = Math.floor(Math.random() * 10000);
+  return num.toString().padStart(4, "0");
+}
+
   try {
-    // Controllo se esiste già un utente con lo stesso codice_utente
     const checkQuery = 'SELECT * FROM utenti WHERE codice_utente = $1';
     const checkResult = await pool.query(checkQuery, [codice_utente]);
 
     if (checkResult.rows.length > 0) {
       return res.status(400).json({ error: 'Utente già presente nel database' });
     }
-
-    // Inserimento nuovo utente
     const insertQuery = `
-      INSERT INTO utenti (name, age, is_admin, date )
-      VALUES ($1, $2, $3, $4)
+      INSERT INTO utenti (name, age, is_admin, date, password_utente )
+      VALUES ($1, $2, $3, $4, $5)
       RETURNING *;
     `;
 
-    const result = await pool.query(insertQuery, [name, age, is_admin, date ]);
+    const result = await pool.query(insertQuery, [name, age, is_admin, date, generaPasswordUtente()]);
 
     res.status(201).json(result.rows[0]);
   } catch (err) {
@@ -101,15 +100,12 @@ app.post('/api/utenti', async (req, res) => {
 app.post('/api/categorie', async (req, res) => {
   const { name } = req.body;
   try {
-    // Controllo se esiste già un utente con lo stesso codice_utente
     const checkQuery = 'SELECT * FROM categorie WHERE name = $1';
     const checkResult = await pool.query(checkQuery, [name]);
 
     if (checkResult.rows.length > 0) {
       return res.status(400).json({ error: 'Categoria già presente nel database' });
     }
-
-    // Inserimento nuovo utente
     const insertQuery = `
       INSERT INTO categorie (name)
       VALUES ($1)

@@ -5,8 +5,8 @@ import GlobalCard from "../Cards/GloabalCard";
 
 export default function ListaUtenti() {
   const { data, loading, error } = useSelector((state) => state.utenti);
-  // Ensure data is always an array
   const dispatch = useDispatch();
+  console.log(data);
 
   useEffect(() => {
     dispatch(getUtentiAsync());

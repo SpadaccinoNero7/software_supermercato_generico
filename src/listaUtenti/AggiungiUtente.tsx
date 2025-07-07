@@ -27,7 +27,7 @@ export default function AggiungiUtente() {
       };
       dispatch(addUtentiAsync(newUser));
       setName("");
-      setAge(0);
+      setAge(18);
       setIsAdmin(false);
       setSnackText("Utente aggiunto con successo!");
       setSnackSeverity("success");
@@ -53,6 +53,7 @@ export default function AggiungiUtente() {
         label="Inserisci il nome"
         color="error"
         autoFocus
+        onChange={(e) => setName(e.target.value)}
       />
       <br />
       <input

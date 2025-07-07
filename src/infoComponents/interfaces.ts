@@ -20,6 +20,7 @@ export default interface InputTestoProps {
     value: string;
     variant?: "outlined" | "filled" | "standard";
     label: string
-    color: "primary" | "secondary" | "error" | "info" | "success" | "warning";
-    autoFocus: boolean
+    color?: "primary" | "secondary" | "error" | "info" | "success" | "warning";
+    autoFocus?: boolean
+    onChange?: (event: React.ChangeEvent<HTMLInputElement>) => void;
 }

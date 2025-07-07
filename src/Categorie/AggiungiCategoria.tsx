@@ -4,6 +4,7 @@ import { addCategorieAsync } from "../slice/categorieSlice";
 import { Link } from "react-router-dom";
 import SnackBar from "../infoComponents/SnackBarComponent";
 import type { RootState } from "../store"; // usa il path giusto per lo store
+import InputTesto from "../infoComponents/InputTesto";
 
 export default function AggiungiCategoria() {
   const [name, setName] = useState<string>("");
@@ -60,11 +61,11 @@ export default function AggiungiCategoria() {
   return (
     <div>
       <h1>Aggiungi una categoria</h1>
-      <input
-        type="text"
+      <InputTesto
         value={name}
+        autoFocus
+        label="Inserisci categoria"
         onChange={(e) => setName(e.target.value)}
-        placeholder="Categoria"
       />
       <button type="submit" onClick={handleAdd}>
         Aggiungi

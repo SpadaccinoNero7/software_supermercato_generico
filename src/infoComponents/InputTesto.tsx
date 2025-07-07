@@ -8,6 +8,7 @@ export default function InputTesto({
   variant,
   color,
   autoFocus,
+  onChange,
 }: InputTestoProps) {
   return (
     <Box
@@ -23,6 +24,7 @@ export default function InputTesto({
         value={value}
         color={color || "primary"}
         autoFocus={autoFocus}
+        onChange={onChange}
       />
     </Box>
   );
