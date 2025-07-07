@@ -1,48 +1,64 @@
 import { useState } from "react";
 import { useDispatch } from "react-redux";
 import { addUtentiAsync } from "../slice/utentiSlice";
+import SnackBar from "../infoComponents/SnackBarComponent";
+import { Link } from "react-router-dom";
+import InputTesto from "../infoComponents/InputTesto";
 
 export default function AggiungiUtente() {
   const [name, setName] = useState<string>("");
-  const [age, setAge] = useState<number>(0);
+  const [age, setAge] = useState<number>(18);
   const [isAdmin, setIsAdmin] = useState<boolean>(false);
-  const [codiceUtente, setCodiceUtente] = useState<string>("0000");
-  const [passwordUtente, setPasswordUtente] = useState<string>("0000");
+
+  const [open, setOpen] = useState<boolean>(false);
+  const [snackSeverity, setSnackSeverity] = useState<
+    "success" | "error" | "warning"
+  >("success");
+  const [snackText, setSnackText] = useState<string>("");
+
   const dispatch = useDispatch();
 
   const handleAdd = () => {
-    if (name && age && codiceUtente && passwordUtente !== undefined) {
+    if (name && age !== undefined) {
       const newUser = {
         name: name,
         age: age,
         is_admin: isAdmin,
-        codice_utente: codiceUtente,
-        password_utente: passwordUtente,
       };
       dispatch(addUtentiAsync(newUser));
       setName("");
       setAge(0);
       setIsAdmin(false);
-      setCodiceUtente("0000");
-      setPasswordUtente("0000");
+      setSnackText("Utente aggiunto con successo!");
+      setSnackSeverity("success");
+      setOpen(true);
     } else {
-      alert("Per favore, compila tutti i campi.");
+      setSnackText("Tutti i campi sono obbligatori.");
+      setSnackSeverity("warning");
+      setOpen(true);
+      setName("");
     }
+  };
+
+  const handleClose = (event, reason) => {
+    if (reason === "clickaway") return;
+    setOpen(false);
   };
 
   return (
     <div>
       <h1>Aggiungi un utente</h1>
-      <input
-        type="text"
+      <InputTesto
         value={name}
-        onChange={(e) => setName(e.target.value)}
-        placeholder="Nome"
+        label="Inserisci il nome"
+        color="error"
+        autoFocus
       />
       <br />
       <input
         type="number"
         value={age}
+        min={18}
         onChange={(e) => setAge(Number(e.target.value))}
         placeholder="Età"
       />
@@ -53,23 +69,20 @@ export default function AggiungiUtente() {
         onChange={(e) => setIsAdmin(e.target.checked)}
       />
       <br />
-      <input
-        type="text"
-        value={codiceUtente}
-        onChange={(e) => setCodiceUtente(e.target.value)}
-        placeholder="Codice Utente"
-      />
-      <br />
-      <input
-        type="text"
-        value={passwordUtente}
-        onChange={(e) => setPasswordUtente(e.target.value)}
-        placeholder="Codice Utente"
-      />
-      <br />
       <button type="submit" onClick={handleAdd}>
         Aggiungi
       </button>
+      <br />
+      <Link to="/utenti">
+        <button>Visualizza utenti</button>
+      </Link>
+      <SnackBar
+        open={open}
+        duration={5000}
+        close={handleClose}
+        severity={snackSeverity}
+        text={snackText}
+      />
     </div>
   );
 }

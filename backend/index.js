@@ -84,12 +84,12 @@ app.post('/api/utenti', async (req, res) => {
 
     // Inserimento nuovo utente
     const insertQuery = `
-      INSERT INTO utenti (name, age, is_admin, date, password_utente, codice_utente )
-      VALUES ($1, $2, $3, $4, $5, $6)
+      INSERT INTO utenti (name, age, is_admin, date )
+      VALUES ($1, $2, $3, $4)
       RETURNING *;
     `;
 
-    const result = await pool.query(insertQuery, [name, age, is_admin, date, password_utente, codice_utente ]);
+    const result = await pool.query(insertQuery, [name, age, is_admin, date ]);
 
     res.status(201).json(result.rows[0]);
   } catch (err) {

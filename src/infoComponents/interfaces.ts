@@ -2,8 +2,6 @@ export default interface Utenti {
     name: string;
     age: number;
     is_admin: boolean;
-    codice_utente: number;
-    password_utente: string;
 }
 
 export default interface Categorie {
@@ -16,4 +14,12 @@ export default interface SnackbarProps {
     close: () => void;
     severity: "success" | "error" | "warning" | "info";
     text: string;
+}
+
+export default interface InputTestoProps {
+    value: string;
+    variant?: "outlined" | "filled" | "standard";
+    label: string
+    color: "primary" | "secondary" | "error" | "info" | "success" | "warning";
+    autoFocus: boolean
 }
