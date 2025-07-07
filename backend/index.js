@@ -56,7 +56,7 @@ app.get('/api/utenti/:id', async (req, res) => {
   }
 });
 
-app.post('/api/utenti', async (req, res) => {
+/* app.post('/api/utenti', async (req, res) => {
   const { name, age, is_admin, date, password_utente, codice_utente } = req.body;
   try {
     const result = await pool.query(
@@ -69,15 +69,54 @@ app.post('/api/utenti', async (req, res) => {
     console.error(err);
     res.status(500).send('Errore server');
   }
+}); */
+app.post('/api/utenti', async (req, res) => {
+  const { name, age, is_admin, date, password_utente, codice_utente } = req.body;
+
+  try {
+    // Controllo se esiste già un utente con lo stesso codice_utente
+    const checkQuery = 'SELECT * FROM utenti WHERE codice_utente = $1';
+    const checkResult = await pool.query(checkQuery, [codice_utente]);
+
+    if (checkResult.rows.length > 0) {
+      return res.status(400).json({ error: 'Utente già presente nel database' });
+    }
+
+    // Inserimento nuovo utente
+    const insertQuery = `
+      INSERT INTO utenti (name, age, is_admin, date, password_utente, codice_utente )
+      VALUES ($1, $2, $3, $4, $5, $6)
+      RETURNING *;
+    `;
+
+    const result = await pool.query(insertQuery, [name, age, is_admin, date, password_utente, codice_utente ]);
+
+    res.status(201).json(result.rows[0]);
+  } catch (err) {
+    console.error(err);
+    res.status(500).send('Errore server');
+  }
 });
 
 app.post('/api/categorie', async (req, res) => {
   const { name } = req.body;
   try {
-    const result = await pool.query(
-  'INSERT INTO categorie (name) VALUES ($1)',
-   [name]
-);
+    // Controllo se esiste già un utente con lo stesso codice_utente
+    const checkQuery = 'SELECT * FROM categorie WHERE name = $1';
+    const checkResult = await pool.query(checkQuery, [name]);
+
+    if (checkResult.rows.length > 0) {
+      return res.status(400).json({ error: 'Categoria già presente nel database' });
+    }
+
+    // Inserimento nuovo utente
+    const insertQuery = `
+      INSERT INTO categorie (name)
+      VALUES ($1)
+      RETURNING *;
+    `;
+
+    const result = await pool.query(insertQuery, [name]);
 
     res.status(201).json(result.rows[0]);
   } catch (err) {

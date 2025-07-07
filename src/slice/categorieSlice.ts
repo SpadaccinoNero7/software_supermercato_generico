@@ -13,12 +13,16 @@ export const getCategorieAsync = createAsyncThunk(
 
 export const addCategorieAsync = createAsyncThunk(
   "categorie/addCategorieAsync",
-  async (payload: Categorie) => {
-    const response = await axios.post(`${PORT}/api/categorie`, {
-  name: payload.name,
-});
-
-    return response.data;
+  async (payload: Categorie, {rejectWithValue}) => {
+    try {
+      const response = await axios.post(`${PORT}/api/categorie`, payload);
+      return response.data;
+    } catch (err: string | null) {
+      if (err.response && err.response.data?.error) {
+        return rejectWithValue(err.response.data.error);
+      }
+      return rejectWithValue("Errore generico durante l'inserimento.");
+    }
   }
 );
 
@@ -63,7 +67,7 @@ const categorieSlice = createSlice({
       })
       .addCase(addCategorieAsync.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.error.message;
+        state.error = action.payload as string;
       })
       .addCase(deleteCategorieAsync.pending, (state) => {
         state.loading = true;

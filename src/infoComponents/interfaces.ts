@@ -9,3 +9,11 @@ export default interface Utenti {
 export default interface Categorie {
     name: string;
 }
+
+export default interface SnackbarProps {
+    open: boolean;
+    duration: number;
+    close: () => void;
+    severity: "success" | "error" | "warning" | "info";
+    text: string;
+}

@@ -1,10 +1,8 @@
 import { useState } from "react";
 import { useDispatch } from "react-redux";
-import { useFetch } from "../customHooks/useFetch";
 import { addUtentiAsync } from "../slice/utentiSlice";
 
 export default function AggiungiUtente() {
-  const { data, loading, error } = useFetch("/api/utenti");
   const [name, setName] = useState<string>("");
   const [age, setAge] = useState<number>(0);
   const [isAdmin, setIsAdmin] = useState<boolean>(false);
