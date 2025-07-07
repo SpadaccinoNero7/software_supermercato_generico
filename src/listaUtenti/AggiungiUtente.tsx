@@ -4,6 +4,7 @@ import { addUtentiAsync } from "../slice/utentiSlice";
 import SnackBar from "../infoComponents/SnackBarComponent";
 import { Link } from "react-router-dom";
 import InputTesto from "../infoComponents/InputTesto";
+import CheckBox from "../infoComponents/CheckBox";
 
 export default function AggiungiUtente() {
   const [name, setName] = useState<string>("");
@@ -56,18 +57,24 @@ export default function AggiungiUtente() {
         onChange={(e) => setName(e.target.value)}
       />
       <br />
-      <input
-        type="number"
+      <InputTesto
         value={age}
-        min={18}
-        onChange={(e) => setAge(Number(e.target.value))}
-        placeholder="Età"
+        label="Inserisci l'età"
+        color="warning"
+        onChange={(e) => {
+          const soloNumeriDueCifre = e.target.value
+            .replace(/[^0-9]/g, "")
+            .slice(0, 2);
+          setAge(soloNumeriDueCifre);
+        }}
       />
       <br />
-      <input
-        type="checkbox"
+      <CheckBox
         checked={isAdmin}
         onChange={(e) => setIsAdmin(e.target.checked)}
+        label="L'utente è un admin?"
+        labelPlacement="top"
+        color="secondary"
       />
       <br />
       <button type="submit" onClick={handleAdd}>

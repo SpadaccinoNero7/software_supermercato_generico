@@ -27,6 +27,14 @@ export const addUtentiAsync = createAsyncThunk(
   }
 );
 
+export const deleteUtentiAsync = createAsyncThunk(
+  "utenti/deleteUtentiAsync",
+  async (id) => {
+    await axios.delete(`${PORT}/api/utenti/${id}`);
+    return id;
+  }
+);
+
 const utentiSlice = createSlice({
   name: "utenti",
   initialState: {
@@ -59,6 +67,18 @@ const utentiSlice = createSlice({
         state.data.push(action.payload);
       })
       .addCase(addUtentiAsync.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.error.message;
+      })
+      .addCase(deleteUtentiAsync.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(deleteUtentiAsync.fulfilled, (state, action) => {
+        state.loading = false;
+        state.data = state.data.filter((utenti) => utenti.id !== action.payload);
+      })
+      .addCase(deleteUtentiAsync.rejected, (state, action) => {
         state.loading = false;
         state.error = action.error.message;
       })

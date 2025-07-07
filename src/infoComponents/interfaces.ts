@@ -24,3 +24,11 @@ export default interface InputTestoProps {
     autoFocus?: boolean
     onChange?: (event: React.ChangeEvent<HTMLInputElement>) => void;
 }
+
+export default interface CheckBoxProps {
+    label: string;
+    checked: boolean;
+    onChange: (event: React.ChangeEvent<HTMLInputElement>) => boolean;
+    labelPlacement?: "end" | "start" | "top" | "bottom";
+    color?: "default" | "primary" | "secondary" | "error" | "info" | "success" | "warning";
+}

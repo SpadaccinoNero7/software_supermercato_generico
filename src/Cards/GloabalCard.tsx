@@ -8,6 +8,7 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import { useDispatch } from "react-redux";
 import { deleteCategorieAsync } from "../slice/categorieSlice";
 import { Link } from "react-router-dom";
+import { deleteUtentiAsync } from "../slice/utentiSlice";
 interface UtenteCardProps {
   type: string;
   data: Utenti[];
@@ -17,7 +18,13 @@ export default function GlobalCard({ type, data }: UtenteCardProps) {
   const dispatch = useDispatch();
 
   const handleDelete = (id) => {
-    dispatch(deleteCategorieAsync(id));
+    if (type === "Utenti") {
+      dispatch(deleteUtentiAsync(id));
+      return;
+    } else if (type === "Categorie") {
+      dispatch(deleteCategorieAsync(id));
+      return;
+    }
   };
   return (
     <>
@@ -39,12 +46,23 @@ export default function GlobalCard({ type, data }: UtenteCardProps) {
                   <Typography variant="body2">
                     Codice Utente: {utente.codice_utente}
                   </Typography>
+                  <DeleteIcon
+                    sx={{ cursor: "pointer", color: "red" }}
+                    onClick={() => handleDelete(utente.id)}
+                  />
                 </CardContent>
               </Card>
             ))
           ) : (
-            <Typography variant="body2" color="text.secondary">
-              Nessun utente trovato.
+            <Typography variant="body2" color="white">
+              Nessun utente trovato
+              <br />
+              Creane uno cliccando {""}
+              <Link to="/aggiungiUtente">
+                <span style={{ color: "white", textDecoration: "underline" }}>
+                  qui
+                </span>
+              </Link>
             </Typography>
           )}
         </Box>

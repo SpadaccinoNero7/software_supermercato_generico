@@ -67,28 +67,55 @@ app.get('/api/utenti/:id', async (req, res) => {
     res.status(500).send('Errore server');
   }
 }); */
+
 app.post('/api/utenti', async (req, res) => {
-  const { name, age, is_admin, date, password_utente, codice_utente } = req.body;
+  const { name, age, is_admin, date } = req.body;
 
   function generaPasswordUtente() {
-  const num = Math.floor(Math.random() * 10000);
-  return num.toString().padStart(4, "0");
-}
+    const num = Math.floor(Math.random() * 10000);
+    return num.toString().padStart(4, "0");
+  }
+
+  async function randomCode(pool) {
+    const result = await pool.query(`
+      WITH codice AS (
+        SELECT codice
+        FROM codici_disponibili
+        ORDER BY RANDOM()
+        LIMIT 1
+      ),
+      del AS (
+        DELETE FROM codici_disponibili
+        WHERE codice IN (SELECT codice FROM codice)
+        RETURNING codice
+      )
+      SELECT codice FROM del;
+    `);
+
+    if (result.rows.length === 0) {
+      throw new Error("Nessun codice disponibile");
+    }
+
+    return result.rows[0].codice;
+  }
 
   try {
-    const checkQuery = 'SELECT * FROM utenti WHERE codice_utente = $1';
-    const checkResult = await pool.query(checkQuery, [codice_utente]);
+    const codice = await randomCode(pool);
 
-    if (checkResult.rows.length > 0) {
-      return res.status(400).json({ error: 'Utente già presente nel database' });
-    }
     const insertQuery = `
-      INSERT INTO utenti (name, age, is_admin, date, password_utente )
-      VALUES ($1, $2, $3, $4, $5)
+      INSERT INTO utenti (name, age, is_admin, date, password_utente, codice_utente)
+      VALUES ($1, $2, $3, $4, $5, $6)
       RETURNING *;
     `;
 
-    const result = await pool.query(insertQuery, [name, age, is_admin, date, generaPasswordUtente()]);
+    const result = await pool.query(insertQuery, [
+      name,
+      age,
+      is_admin,
+      date,
+      generaPasswordUtente(),
+      codice,
+    ]);
 
     res.status(201).json(result.rows[0]);
   } catch (err) {
@@ -96,6 +123,7 @@ app.post('/api/utenti', async (req, res) => {
     res.status(500).send('Errore server');
   }
 });
+
 
 app.post('/api/categorie', async (req, res) => {
   const { name } = req.body;
@@ -134,6 +162,38 @@ app.delete('/api/categorie/:id', async (req, res) => {
     res.status(500).send('Errore server');
   }
 })
+
+app.delete('/api/utenti/:id', async (req, res) => {
+  const id = req.params.id;
+
+  try {
+    const deleteResult = await pool.query(`
+      DELETE FROM utenti
+      WHERE id = $1
+      RETURNING codice_utente;
+    `, [id]);
+
+    if (deleteResult.rowCount === 0) {
+      return res.status(404).send('Utente non trovato');
+    }
+
+    const codice = deleteResult.rows[0].codice_utente;
+
+    if (codice !== null) {
+      await pool.query(`
+        INSERT INTO codici_disponibili (codice)
+        VALUES ($1)
+        ON CONFLICT DO NOTHING;
+      `, [codice]);
+    }
+
+    res.status(204).send();
+  } catch (err) {
+    console.error(err);
+    res.status(500).send('Errore server');
+  }
+});
+
 
 app.listen(port, () => {
   console.log(`Server avviato su http://localhost:${port}`);
