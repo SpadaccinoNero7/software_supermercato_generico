@@ -27,8 +27,24 @@ export default interface InputTestoProps {
 
 export default interface CheckBoxProps {
     label: string;
-    checked: boolean;
+    checked: boolean | string[];
     onChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
     labelPlacement?: "end" | "start" | "top" | "bottom";
     color?: "default" | "primary" | "secondary" | "error" | "info" | "success" | "warning";
+}
+
+export default interface ProdottiProps {
+    name: string;
+    price: number;
+    category: string;
+    stock: number;
+    isAvailable: boolean;
+    isFeatured: boolean;
+}
+
+export interface SelectNamesProps {
+  options: string[];
+  value: string;
+  label: string;
+  onChange: (event: React.ChangeEvent<{ value: unknown }>) => void;
 }

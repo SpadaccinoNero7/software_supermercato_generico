@@ -9,6 +9,8 @@ import { Provider } from "react-redux";
 import { store } from "./store/store.ts";
 import AggiungiCategoria from "./Categorie/AggiungiCategoria.tsx";
 import ListaCategorie from "./Categorie/ListaCategorie.tsx";
+import ListaProdotti from "./Prodotti/ListaProdotti.tsx";
+import AggiungiProdotto from "./Prodotti/AggiungiProdotto.tsx";
 
 createRoot(document.getElementById("root")!).render(
   <Provider store={store}>
@@ -17,9 +19,12 @@ createRoot(document.getElementById("root")!).render(
         <Routes>
           <Route path="/" element={<App />} />
           <Route path="/utenti" element={<ListaUtenti />} />
+          <Route path="/prodotti" element={<ListaProdotti />} />
           <Route path="/categorie" element={<ListaCategorie />} />
           <Route path="/aggiungiUtente" element={<AggiungiUtente />} />
           <Route path="/aggiungiCategoria" element={<AggiungiCategoria />} />
+          <Route path="/aggiungiCategoria" element={<AggiungiCategoria />} />
+          <Route path="/aggiungiProdotto" element={<AggiungiProdotto />} />
         </Routes>
       </BrowserRouter>
     </StrictMode>
