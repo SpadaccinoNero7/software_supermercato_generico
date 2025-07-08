@@ -7,6 +7,7 @@ export default function ListaCategorie() {
   const { data, loading, error } = useSelector((state) => state.categorie);
   // Ensure data is always an array
   const dispatch = useDispatch();
+  console.log(data);
 
   useEffect(() => {
     dispatch(getCategorieAsync());

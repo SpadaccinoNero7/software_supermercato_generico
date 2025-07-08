@@ -28,6 +28,15 @@ app.get('/api/utenti', async (req, res) => {
     res.status(500).send('Errore server');
   }
 });
+app.get('/api/prodotti', async (req, res) => {
+  try {
+    const result = await pool.query('SELECT * FROM prodotti ORDER BY id');
+    res.json(result.rows);
+  } catch (err) {
+    console.error(err);
+    res.status(500).send('Errore server');
+  }
+});
 
 app.get('/api/categorie', async (req, res) => {
   try {
@@ -141,6 +150,29 @@ app.post('/api/categorie', async (req, res) => {
     `;
 
     const result = await pool.query(insertQuery, [name]);
+
+    res.status(201).json(result.rows[0]);
+  } catch (err) {
+    console.error(err);
+    res.status(500).send('Errore server');
+  }
+});
+app.post('/api/prodotti', async (req, res) => {
+  const { name, expiration_date, category_id, price, stock, is_available } = req.body;
+  try {
+    const checkQuery = 'SELECT * FROM prodotti WHERE name = $1';
+    const checkResult = await pool.query(checkQuery, [name]);
+
+    if (checkResult.rows.length > 0) {
+      return res.status(400).json({ error: 'Prodotto già presente nel database' });
+    }
+    const insertQuery = `
+      INSERT INTO prodotti (name, expiration_date, category_id, price, stock, is_available )
+      VALUES ($1, $2, (SELECT id FROM categorie WHERE name = $3), $4, $5, $6)
+      RETURNING *;
+    `;
+
+    const result = await pool.query(insertQuery, [name, expiration_date, category_id, price, stock, is_available]);
 
     res.status(201).json(result.rows[0]);
   } catch (err) {

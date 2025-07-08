@@ -98,6 +98,37 @@ export default function GlobalCard({ type, data }: UtenteCardProps) {
           )}
         </Box>
       )}
+      {type === "Prodotti" && (
+        <Box>
+          {data && data.length > 0 ? (
+            data.map((el: Categorie) => (
+              <Card key={el.id} sx={{ width: "fit-content", mb: 2 }}>
+                <CardContent>
+                  <Typography variant="h6" component="div">
+                    {el.name}
+                  </Typography>
+
+                  <DeleteIcon
+                    sx={{ cursor: "pointer", color: "red" }}
+                    onClick={() => handleDelete(el.id)}
+                  />
+                </CardContent>
+              </Card>
+            ))
+          ) : (
+            <Typography variant="body2" color="white">
+              Nessuna prodotto trovato
+              <br />
+              Aggiungine uno cliccando {""}
+              <Link to="/aggiungiProdotto">
+                <span style={{ color: "white", textDecoration: "underline" }}>
+                  qui
+                </span>
+              </Link>
+            </Typography>
+          )}
+        </Box>
+      )}
     </>
   );
 }
