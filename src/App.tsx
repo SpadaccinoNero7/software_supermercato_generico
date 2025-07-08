@@ -1,4 +1,3 @@
-import "./App.css";
 import { useForm, type Resolver } from "react-hook-form";
 import { useState } from "react";
 

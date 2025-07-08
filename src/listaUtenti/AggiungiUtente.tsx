@@ -1,11 +1,10 @@
 import { useState } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { addUtentiAsync } from "../slice/utentiSlice";
 import SnackBar from "../infoComponents/SnackBarComponent";
 import { Link } from "react-router-dom";
 import InputTesto from "../infoComponents/InputTesto";
 import CheckBox from "../infoComponents/CheckBox";
-import "./utenti.css";
 
 export default function AggiungiUtente() {
   const [name, setName] = useState<string>("");
@@ -19,6 +18,8 @@ export default function AggiungiUtente() {
   const [snackText, setSnackText] = useState<string>("");
 
   const dispatch = useDispatch();
+
+  const mode = useSelector((state) => state.viewMode.value);
 
   const handleAdd = () => {
     if (name && age !== undefined) {
@@ -48,7 +49,8 @@ export default function AggiungiUtente() {
   };
 
   return (
-    <div>
+    <>
+      {mode}
       <h1>Aggiungi un utente</h1>
       <InputTesto
         value={name}
@@ -92,6 +94,6 @@ export default function AggiungiUtente() {
         severity={snackSeverity}
         text={snackText}
       />
-    </div>
+    </>
   );
 }
